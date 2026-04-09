@@ -184,7 +184,7 @@ const Sidebar = () => {
     { to: '/profile', label: 'Profile', icon: <UserCircleIcon /> }
   ];
 
-  const links = role === 'admin' ? adminLinks : userLinks;
+  const links = role === 'ROLE_ADMIN' ? adminLinks : userLinks;
 
   return (
     <aside className="w-72 bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white h-screen p-6 flex flex-col shadow-2xl">

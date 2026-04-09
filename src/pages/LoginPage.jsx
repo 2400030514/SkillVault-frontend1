@@ -9,20 +9,20 @@ const LoginPage = ({ setView }) => {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    const res = login(username, password);
-    // login may return an object with success and reason
-    const result = typeof res === 'object' ? res : { success: !!res };
-    if (result.success) {
-      alert('Login Successful!');
-      navigate('/dashboard');
-    } else if (result.reason === 'inactive') {
-      navigate('/account-locked');
-    } else {
-      alert('Invalid credentials or account does not exist');
-    }
-  };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const result = await login(username, password);
+
+  if (result.success) {
+    alert("Login Successful!");
+    navigate("/dashboard");
+  } else if (result.reason === "inactive") {
+    navigate("/account-locked");
+  } else {
+    alert("Invalid credentials");
+  }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 via-black to-black">

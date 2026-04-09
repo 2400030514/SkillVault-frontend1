@@ -10,37 +10,42 @@ const SignupPage = ({ setView }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const { register } = useContext(AuthContext);
+  const [name, setName] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    setError('');
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
 
-    // Validation
-    if (!username.trim()) {
-      setError('Username is required');
-      return;
-    }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
+  if (!username.trim()) {
+    setError("Username is required");
+    return;
+  }
+  if (!name.trim()) {
+  setError("Name is required");
+  return;
+}
 
-    // attempt registration
-    const success = register(username, password);
-    if (!success) {
-      setError('Username already exists');
-      return;
-    }
+  if (password.length < 6) {
+    setError("Password must be at least 6 characters");
+    return;
+  }
 
-    // switch to login view with message
-    alert('Account created! Please sign in.');
-    setView('login');
-  };
+  if (password !== confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
+
+  const success = await register(name, username, password);
+
+  if (!success) {
+    setError("Signup failed");
+    return;
+  }
+
+  alert("Account created! Please login.");
+  setView("login");
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 via-black to-black">
@@ -81,7 +86,43 @@ const SignupPage = ({ setView }) => {
           </div>
         )}
 
+
+
         {/* Username Input with Envelope Icon */}
+
+        <div className="mb-5">
+  <div className="relative">
+    <svg
+      className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-400"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M5.121 17.804A9 9 0 1118.879 6.196 9 9 0 015.121 17.804z"
+      />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+      />
+    </svg>
+
+    <input
+      type="text"
+      placeholder="Full Name"
+      value={name}
+      onChange={e => setName(e.target.value)}
+      required
+      className="w-full pl-10 pr-4 py-3 bg-black bg-opacity-30 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+    />
+  </div>
+</div>
+        
         <div className="mb-5">
           <div className="relative">
             <svg

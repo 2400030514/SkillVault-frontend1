@@ -22,28 +22,49 @@ import { dummyCertifications } from './data/dummyData';
 import PageContainer from './components/PageContainer';
 import ErrorBoundary from './components/ErrorBoundary';
 
+import api from './utils/axiosConfig';
 
 const App = () => {
   const [certifications, setCertifications] = useState([]);
 
-  useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem('certs'));
-    if (stored) {
-      setCertifications(stored);
-    } else {
-      setCertifications(dummyCertifications);
+useEffect(() => {
+  const fetchCerts = async () => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (token) {
+      try {
+        let response;
+
+        if (role === "ROLE_ADMIN") {
+  response = await api.get("/certifications/all");
+} else {
+  response = await api.get("/certifications");
+}
+
+        setCertifications(response.data);
+      } catch (err) {
+        console.error(err);
+      }
     }
-  }, []);
+  };
 
-  useEffect(() => {
-    localStorage.setItem('certs', JSON.stringify(certifications));
-  }, [certifications]);
+  fetchCerts();
+}, []);
 
-  const handleAdd = cert => {
-    setCertifications(prev => [
-      ...prev,
-      { id: Date.now(), ...cert }
-    ]);
+  const handleAdd = async (cert) => {
+    try {
+      const response = await api.post('/certifications', {
+          name: cert.name,
+          issuer: cert.issuer,
+          issueDate: cert.issueDate,
+          expiryDate: cert.expiryDate
+      });
+      setCertifications(prev => [...prev, response.data]);
+    } catch (err) {
+      console.error("Error creating certification:", err);
+      alert("Failed to save certification. Please try again.");
+    }
   };
 
   return (
@@ -80,7 +101,7 @@ const AuthContainer = ({ certifications, onAdd }) => {
   const effectiveRole = user?.role || role;
 
   // admin layout
-  if (effectiveRole === 'admin') {
+ if (effectiveRole?.includes("ADMIN")) {
     return (
       <Layout>
         <ErrorBoundary>
