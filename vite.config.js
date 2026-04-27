@@ -3,5 +3,8 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: "/"
+  base: "/",
+  preview: {
+    allowedHosts: ['skillvault-frontend1-production.up.railway.app']
+  }
 });
