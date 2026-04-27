@@ -23,7 +23,7 @@ const AdminDashboard = ({ certifications = [] }) => {
   useEffect(() => {
     const fetchCerts = async () => {
       try {
-        const response = await api.get("/api/certifications/all");
+        const response = await api.get("/certifications/all");
         setCertData(response.data);
       } catch (err) {
         console.error("Error fetching certs:", err);
