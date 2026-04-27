@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "https://skillvault-backend1-production.up.railway.app/api",
 });
 
 api.interceptors.request.use((config) => {
